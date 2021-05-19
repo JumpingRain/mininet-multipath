@@ -1,7 +1,7 @@
-targets=sim-client sim-server
+targets=sim-client sim-server client server
 bins=$(patsubst %,bin/%,$(targets))
 
-default: force sync
+default: force 
 
 all : $(bins)
 

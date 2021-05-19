@@ -104,11 +104,15 @@ class MPTopo(BaseTopo):
         for i in range(self.paths):
             print("path " + str(i))
             client = PREFIX + str(i) + ".1"
-            tail = " >/dev/null 2> /dev/null || echo 1"
-            res = cmd(self.client, "ping -qc 1 -I " + client + " " + server + tail)
+            # tail = " >/dev/null 2> /dev/null || echo 1"
+            tails = " >temp/stestout"+str(i)+".log 2> temp/stesterror"+str(i)+".log || echo 1"
+            tailc = " >temp/ctestout"+str(i)+".log 2> temp/ctesterror"+str(i)+".log || echo 1"
+            res = cmd(self.client, "ping -qc 1 -I " + client + " " + server + tailc)
+            # print(res)
             if res != "":
                 print("ping failed client -> server")
-            res = cmd(self.server, "ping -qc 1 " + client + tail)
+            res = cmd(self.server, "ping -qc 1 " + client + tails)
+            # print(res)
             if res != "":
                 print("failed server -> client")
     

@@ -2,7 +2,7 @@ from __future__ import print_function
 from time import sleep, time
 from network.exe import Exe, kill
 from network.topo import MPTopo, PREFIX, log
-from settings import SETTING, HAR, BATCH, LOG
+from settings import SETTING, HAR, BATCH, LOG, NOLOG
 
 class MPQuicExe(Exe):
     def __init__(self, topo):
@@ -10,7 +10,7 @@ class MPQuicExe(Exe):
         self.topo = topo
         self.port = ":6121"
         self.server = PREFIX + str(self.topo.paths) + ".1" + self.port
-    
+
     def run(self, size):
         spid = self.logRun(self.topo.server, "server", 'bin/server -size=' + str(size) + ' -listen="' + self.port + '"', True)
 
@@ -27,6 +27,7 @@ class MPQuicExe(Exe):
         return bd
 
     def runHar(self, harFile, output="batch.log"):
+        self.topo.testConnection()
         fout = open(self.path + "/" + output, "w", 1)
         spid = self.logRun(self.topo.server, "sim-server", 'bin/sim-server -har="' + harFile + '" -listen="' + self.port + '"', bg=True, log=LOG)
         sleep(0.1)
@@ -89,9 +90,9 @@ if __name__ == "__main__":
     # exe.runBatch(SETTINGS, TESTS)
 
     # small test
-    # exe = MPQuicExe(topo, SIZE)
+    # exe = MPQuicExe(topo)
     # topo.configBothLink(0, 5000, 20000)
     # topo.configBothLink(1, 10000, 60000)
-    # exe.run()
+    # exe.run(100000)
 
     topo.stopNet()
